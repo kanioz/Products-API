@@ -23,7 +23,6 @@ namespace Products.API.Tests
                     var scopedService = scope.ServiceProvider;
                     var db = scopedService.GetRequiredService<ProductDbContext>();
                     db.Database.EnsureCreated();
-
                 });
         }
     }

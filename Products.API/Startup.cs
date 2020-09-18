@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Products.API.Data;
+using Products.API.Helper;
 using Products.API.Service;
 
 namespace Products.API
@@ -22,7 +23,9 @@ namespace Products.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -32,15 +35,19 @@ namespace Products.API
                     Description = "A simple example ASP.NET Core Web API",
                     Contact = new OpenApiContact
                     {
-                        Name = "Abdulkani �zbey",
+                        Name = "Abdulkani Özbey",
                         Email = "adulkaniozbey@gmail.com",
                         Url = new Uri("https://twitter.com/kanioz")
                     }
                 });
             });
+
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
             services.AddDbContext<ProductDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IUserService, UserService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -54,7 +61,14 @@ namespace Products.API
 
             app.UseRouting();
 
-            app.UseAuthorization();
+
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+            );
+
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

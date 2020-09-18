@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Products.API.Data;
+using Products.API.Model;
 
 
 namespace Products.API.Tests
@@ -16,7 +17,8 @@ namespace Products.API.Tests
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            SeedData<Products.API.Model.Product>(modelBuilder, "../../../data/products.json");
+            SeedData<User>(modelBuilder, "../../../data/users.json");
+            SeedData<Product>(modelBuilder, "../../../data/products.json");
         }
 
         private void SeedData<T>(ModelBuilder modelBuilder, string file) where T : class

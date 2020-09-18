@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Products.API.Model;
 using Products.API.Service;
 
 namespace Products.API.Controllers
 {
+    [Authorize]
     [Route("api/Products")]
     [ApiController]
     public class ProductsController :  ControllerBase
@@ -57,7 +59,5 @@ namespace Products.API.Controllers
             }
             return Ok(_service.Delete(id));
         }
-
-
     }
 }
